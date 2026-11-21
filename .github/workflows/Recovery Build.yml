@@ -18,19 +18,19 @@ on:
       DEVICE_TREE_URL:
         description: Device Tree URL
         required: true
-        default: https://github.com/TeamWin/android_device_asus_I003D
+        default: https://github.com/imsogoatedlol595/device_alps_mgvi_64_armv82
       DEVICE_TREE_BRANCH:
         description: Device Tree Branch
         required: true
-        default: android-12.1
+        default: main
       DEVICE_PATH:
         description: Path the device tree should be synced to, relative to source root
         required: true
-        default: device/asus/I003D
+        default: device/alps/mgvi_64_armv82
       DEVICE_NAME:
         description: Device Name from tree (should match name on twrp_<DEVICE_NAME>.mk)
         required: true
-        default: I003D
+        default: mgvi_64_armv82
       REPOPICK_PATCHES:
         description: (Optional) Gerrit commit numbers separated by a space to be included in the build (leave blank if not using)
         type: string
@@ -39,11 +39,11 @@ on:
         type: choice
         description: Partition containing recovery ramdisk
         options:
+        - vendor_boot
         - boot
         - recovery
-        - vendor_boot
         required: true
-        default: recovery
+        default: vendor_boot
       RECOVERY_INSTALLER:
         description: Include recovery installer zip
         type: boolean
@@ -53,8 +53,7 @@ on:
 jobs:
   build:
     if: github.event.repository.owner.id == github.event.sender.id
-    runs-on: ubuntu-20.04
-    # You can use either of the ubuntu-20.04 or ubuntu-22.04 runner
+    runs-on: ubuntu-22.04
     steps:
     - name: Display Run Parameters
       run: |
@@ -67,15 +66,12 @@ jobs:
         echo "Build Target: ${{ inputs.BUILD_TARGET }}.img"
         echo "Include Recovery Installer: ${{ inputs.RECOVERY_INSTALLER }}"
         echo "::endgroup::"
- 
-    # You might want to Checkout your repo first, but not mandatory
+
     - name: Check Out
       uses: actions/checkout@v4
-            
-    # Cleanup The Actions Workspace Using Custom Composite Run Actions
+
     - name: Cleanup
       uses: rokibhasansagar/slimhub_actions@main
-      # That's it! Now use your normal steps
 
     - name: Set Swap Space
       uses: pierotofy/set-swap-space@master
@@ -111,7 +107,7 @@ jobs:
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
         sudo ln -sf ~/bin/repo /usr/bin/repo
-      
+
     - name: Initialize repo
       run: |
         mkdir workspace
@@ -119,7 +115,7 @@ jobs:
         git config --global user.name "${GITHUB_ACTOR}"
         git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
         repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_${{ steps.buildtree.outputs.value }}.git -b twrp-${{ inputs.MANIFEST_BRANCH }}
-          
+
     - name: Repo Sync
       run: |
         repo sync -j$(nproc --all) --force-sync
@@ -228,7 +224,7 @@ jobs:
         sudo ln -sf python2 python
 
     - name: Building recovery (AOSP)
-      if: ${{ steps.buildtree.outputs.value == 'aosp' }} 
+      if: ${{ steps.buildtree.outputs.value == 'aosp' }}
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
@@ -240,7 +236,7 @@ jobs:
       working-directory: workspace
 
     - name: Building recovery (Omni)
-      if: ${{ steps.buildtree.outputs.value == 'omni' }} 
+      if: ${{ steps.buildtree.outputs.value == 'omni' }}
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true

@@ -222,6 +222,9 @@ jobs:
         cd /usr/bin
         sudo ln -sf python2 python
 
+    - name: Disk and memory
+      run: df -h && free -h
+
     - name: Building recovery (AOSP)
       if: ${{ steps.buildtree.outputs.value == 'aosp' }}
       run: |
@@ -231,7 +234,7 @@ jobs:
           export USE_RECOVERY_INSTALLER=true
           export RECOVERY_INSTALLER_PATH=bootable/recovery/installer
         fi
-        lunch twrp_${{ inputs.DEVICE_NAME }}-eng && make $(tr -d _ <<< ${{ inputs.BUILD_TARGET }})image -j$(nproc --all)
+        lunch twrp_${{ inputs.DEVICE_NAME }}-eng && make $(tr -d _ <<< ${{ inputs.BUILD_TARGET }})image -j2
       working-directory: workspace
 
     - name: Building recovery (Omni)

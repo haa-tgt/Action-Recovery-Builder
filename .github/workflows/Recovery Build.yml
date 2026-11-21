@@ -18,19 +18,19 @@ on:
       DEVICE_TREE_URL:
         description: Device Tree URL
         required: true
-        default: https://github.com/twrpdtgen/android_device_xiaomi_emerald
+        default: https://github.com/imsogoatedlol595/device_alps_mgvi_64_armv82
       DEVICE_TREE_BRANCH:
         description: Device Tree Branch
         required: true
-        default: emerald-user-12-SP1A.210812.016-OS2.0.209.0.VNFMIXM-release-keys
+        default: main
       DEVICE_PATH:
         description: Path the device tree should be synced to, relative to source root
         required: true
-        default: device/xiaomi/emerald
+        default: device/alps/mgvi_64_armv82
       DEVICE_NAME:
         description: Device Name from tree (should match name on twrp_<DEVICE_NAME>.mk)
         required: true
-        default: emerald
+        default: mgvi_64_armv82
       REPOPICK_PATCHES:
         description: (Optional) Gerrit commit numbers separated by a space to be included in the build (leave blank if not using)
         type: string
